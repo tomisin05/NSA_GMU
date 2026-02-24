@@ -68,7 +68,7 @@ export default function Home() {
         {/* Featured Event */}
         {featuredEvent && (
           <>
-            <SectionLabel label="Featured Event" delay={260} />
+            <SectionLabel label="Featured Events" delay={260} />
             <div className="w-full mb-3">
               <EventCard
                 event={featuredEvent}

@@ -1,5 +1,36 @@
 export default function EventCard({ event, style }) {
-  const isPast = event.date && new Date(event.date) < new Date()
+  const getEventStatus = () => {
+    if (!event.date) return 'upcoming'
+    const now = new Date()
+    const eventDate = new Date(event.date + 'T00:00:00')
+    
+    if (event.time && event.endTime) {
+      const parseTime = (timeStr) => {
+        const [time, period] = timeStr.trim().split(' ')
+        const [hours, minutes] = time.split(':')
+        let hour = parseInt(hours)
+        if (period?.toLowerCase() === 'pm' && hour !== 12) hour += 12
+        if (period?.toLowerCase() === 'am' && hour === 12) hour = 0
+        return { hour, minute: parseInt(minutes) || 0 }
+      }
+      
+      const start = parseTime(event.time)
+      const end = parseTime(event.endTime)
+      const eventStart = new Date(eventDate)
+      eventStart.setHours(start.hour, start.minute)
+      const eventEnd = new Date(eventDate)
+      eventEnd.setHours(end.hour, end.minute)
+      
+      if (now >= eventStart && now <= eventEnd) return 'live'
+      if (now > eventEnd) return 'past'
+    } else if (now > eventDate) {
+      return 'past'
+    }
+    
+    return 'upcoming'
+  }
+
+  const status = getEventStatus()
   const formattedDate = event.date
     ? new Date(event.date + 'T00:00:00').toLocaleDateString('en-US', {
         month: 'long', day: 'numeric', year: 'numeric',
@@ -22,8 +53,8 @@ export default function EventCard({ event, style }) {
       )}
       <span className={`inline-block text-white text-[0.65rem] uppercase tracking-widest
                         font-medium px-3 py-1 rounded-full mb-3
-                        ${isPast ? 'bg-white/20' : 'bg-nsa-green'}`}>
-        {isPast ? 'Past Event' : (event.badge || 'Upcoming')}
+                        ${status === 'past' ? 'bg-white/20' : status === 'live' ? 'bg-red-500 animate-pulse' : 'bg-nsa-green'}`}>
+        {status === 'past' ? 'Past Event' : status === 'live' ? 'Live Now' : (event.badge || 'Upcoming')}
       </span>
       <h3 className="font-display text-xl font-bold mb-2 text-white">{event.title}</h3>
       {event.description && (
@@ -34,7 +65,7 @@ export default function EventCard({ event, style }) {
           <span className="flex items-center gap-1.5">{formattedDate}</span>
         )}
         {event.time && (
-          <span className="flex items-center gap-1.5">{event.time}</span>
+          <span className="flex items-center gap-1.5">{event.time}{event.endTime && ` - ${event.endTime}`}</span>
         )}
         {event.location && (
           <span className="flex items-center gap-1.5">{event.location}</span>

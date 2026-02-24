@@ -175,13 +175,13 @@ function EventsTab() {
   const [editing, setEditing] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [form, setForm] = useState({
-    title: '', description: '', date: '', time: '', location: '',
+    title: '', description: '', date: '', time: '', endTime: '', location: '',
     price: 'Free Entry', url: '', badge: 'Upcoming', flyer: ''
   })
 
   const openAdd = () => {
     setEditing(null)
-    setForm({ title: '', description: '', date: '', time: '', location: '', price: 'Free Entry', url: '', badge: 'Upcoming', flyer: '' })
+    setForm({ title: '', description: '', date: '', time: '', endTime: '', location: '', price: 'Free Entry', url: '', badge: 'Upcoming', flyer: '' })
     setShowForm(true)
   }
 
@@ -189,7 +189,7 @@ function EventsTab() {
     setEditing(ev.id)
     setForm({
       title: ev.title, description: ev.description || '', date: ev.date || '',
-      time: ev.time || '', location: ev.location || '', price: ev.price || 'Free Entry',
+      time: ev.time || '', endTime: ev.endTime || '', location: ev.location || '', price: ev.price || 'Free Entry',
       url: ev.url || '', badge: ev.badge || 'Upcoming', flyer: ev.flyer || ''
     })
     setShowForm(true)
@@ -254,8 +254,9 @@ function EventsTab() {
           <FormField label="Description" value={form.description} onChange={v => setForm(f => ({ ...f, description: v }))} placeholder="Brief description" multiline />
           <div className="grid grid-cols-2 gap-3">
             <FormField label="Date" type="date" value={form.date} onChange={v => setForm(f => ({ ...f, date: v }))} />
-            <FormField label="Time" value={form.time} onChange={v => setForm(f => ({ ...f, time: v }))} placeholder="e.g. 7:00 PM" />
+            <FormField label="Start Time" value={form.time} onChange={v => setForm(f => ({ ...f, time: v }))} placeholder="e.g. 7:00 PM" />
           </div>
+          <FormField label="End Time" value={form.endTime} onChange={v => setForm(f => ({ ...f, endTime: v }))} placeholder="e.g. 10:00 PM" />
           <FormField label="Location" value={form.location} onChange={v => setForm(f => ({ ...f, location: v }))} placeholder="e.g. Student Union Hall, Room 101" />
           <FormField label="Price / Ticket Info" value={form.price} onChange={v => setForm(f => ({ ...f, price: v }))} placeholder="e.g. Free Entry, $10" />
           <ImageUpload value={form.flyer} onUpload={handleFileUpload} uploading={uploading} />
