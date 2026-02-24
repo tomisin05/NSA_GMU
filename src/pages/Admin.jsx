@@ -272,7 +272,7 @@ function EventsTab() {
               <div className="flex-1 min-w-0">
                 <p className="font-medium">{event.title}</p>
                 <p className="text-white/40 text-xs mt-0.5">
-                  {event.date && new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  {event.date && new Date(event.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                   {event.location && ` · ${event.location}`}
                 </p>
               </div>

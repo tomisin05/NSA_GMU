@@ -1,7 +1,7 @@
 export default function EventCard({ event, style }) {
   const isPast = event.date && new Date(event.date) < new Date()
   const formattedDate = event.date
-    ? new Date(event.date).toLocaleDateString('en-US', {
+    ? new Date(event.date + 'T00:00:00').toLocaleDateString('en-US', {
         month: 'long', day: 'numeric', year: 'numeric',
       })
     : null
@@ -18,7 +18,7 @@ export default function EventCard({ event, style }) {
                  border border-nsa-green/40 hover:border-nsa-green/70"
     >
       {event.flyer && (
-        <img src={event.flyer} alt={event.title} className="w-full h-48 object-cover rounded-xl mb-4" />
+        <img src={event.flyer} alt={event.title} className="w-full object-contain rounded-xl mb-4" />
       )}
       <span className={`inline-block text-white text-[0.65rem] uppercase tracking-widest
                         font-medium px-3 py-1 rounded-full mb-3
