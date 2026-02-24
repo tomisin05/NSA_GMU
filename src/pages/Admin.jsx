@@ -173,12 +173,12 @@ function EventsTab() {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState({
     title: '', description: '', date: '', time: '', location: '',
-    price: 'Free Entry', url: '', badge: 'Upcoming'
+    price: 'Free Entry', url: '', badge: 'Upcoming', flyer: ''
   })
 
   const openAdd = () => {
     setEditing(null)
-    setForm({ title: '', description: '', date: '', time: '', location: '', price: 'Free Entry', url: '', badge: 'Upcoming' })
+    setForm({ title: '', description: '', date: '', time: '', location: '', price: 'Free Entry', url: '', badge: 'Upcoming', flyer: '' })
     setShowForm(true)
   }
 
@@ -187,7 +187,7 @@ function EventsTab() {
     setForm({
       title: ev.title, description: ev.description || '', date: ev.date || '',
       time: ev.time || '', location: ev.location || '', price: ev.price || 'Free Entry',
-      url: ev.url || '', badge: ev.badge || 'Upcoming'
+      url: ev.url || '', badge: ev.badge || 'Upcoming', flyer: ev.flyer || ''
     })
     setShowForm(true)
   }
@@ -235,6 +235,7 @@ function EventsTab() {
           </div>
           <FormField label="Location" value={form.location} onChange={v => setForm(f => ({ ...f, location: v }))} placeholder="e.g. Student Union Hall, Room 101" />
           <FormField label="Price / Ticket Info" value={form.price} onChange={v => setForm(f => ({ ...f, price: v }))} placeholder="e.g. Free Entry, $10" />
+          <FormField label="Flyer Image URL (optional)" value={form.flyer} onChange={v => setForm(f => ({ ...f, flyer: v }))} placeholder="https://..." />
           <FormField label="RSVP / Ticket URL" value={form.url} onChange={v => setForm(f => ({ ...f, url: v }))} placeholder="https://..." />
           <FormField label="Badge Label" value={form.badge} onChange={v => setForm(f => ({ ...f, badge: v }))} placeholder="e.g. Upcoming, RSVP Now, Tonight!" />
         </FormCard>

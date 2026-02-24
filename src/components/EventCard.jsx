@@ -17,6 +17,9 @@ export default function EventCard({ event, style }) {
                  bg-gradient-to-br from-nsa-green/20 to-nsa-gold/10
                  border border-nsa-green/40 hover:border-nsa-green/70"
     >
+      {event.flyer && (
+        <img src={event.flyer} alt={event.title} className="w-full h-48 object-cover rounded-xl mb-4" />
+      )}
       <span className={`inline-block text-white text-[0.65rem] uppercase tracking-widest
                         font-medium px-3 py-1 rounded-full mb-3
                         ${isPast ? 'bg-white/20' : 'bg-nsa-green'}`}>
