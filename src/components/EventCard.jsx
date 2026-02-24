@@ -1,4 +1,4 @@
-export default function EventCard({ event, style }) {
+export default function EventCard({ event, onTrackClick, style }) {
   const getEventStatus = () => {
     if (!event.date) return 'upcoming'
     const now = new Date()
@@ -30,6 +30,10 @@ export default function EventCard({ event, style }) {
     return 'upcoming'
   }
 
+  const handleClick = () => {
+    if (onTrackClick) onTrackClick(event.id)
+  }
+
   const status = getEventStatus()
   const formattedDate = event.date
     ? new Date(event.date + 'T00:00:00').toLocaleDateString('en-US', {
@@ -42,6 +46,7 @@ export default function EventCard({ event, style }) {
       href={event.url || '#'}
       target={event.url ? '_blank' : '_self'}
       rel="noopener noreferrer"
+      onClick={handleClick}
       style={style}
       className="block p-5 rounded-2xl animate-slide-up transition-all duration-200
                  hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(0,135,81,0.25)]

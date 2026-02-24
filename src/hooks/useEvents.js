@@ -19,7 +19,7 @@ export function useEvents() {
   }, [])
 
   const addEvent = (data) =>
-    addDoc(collection(db, 'events'), { ...data, createdAt: serverTimestamp() })
+    addDoc(collection(db, 'events'), { ...data, clicks: 0, createdAt: serverTimestamp() })
 
   const updateEvent = (id, data) =>
     updateDoc(doc(db, 'events', id), data)
@@ -27,5 +27,12 @@ export function useEvents() {
   const deleteEvent = (id) =>
     deleteDoc(doc(db, 'events', id))
 
-  return { events, loading, addEvent, updateEvent, deleteEvent }
+  const trackClick = async (id) => {
+    const event = events.find(e => e.id === id)
+    if (event) {
+      await updateDoc(doc(db, 'events', id), { clicks: (event.clicks || 0) + 1 })
+    }
+  }
+
+  return { events, loading, addEvent, updateEvent, deleteEvent, trackClick }
 }

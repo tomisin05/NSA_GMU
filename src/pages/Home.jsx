@@ -23,7 +23,7 @@ const SOCIALS = [
 
 export default function Home() {
   const { links, loading: linksLoading, trackClick } = useLinks();
-  const { events, loading: eventsLoading } = useEvents();
+  const { events, loading: eventsLoading, trackClick: trackEventClick } = useEvents();
   const { profile } = useProfile();
 
   const getEventStatus = (event) => {
@@ -124,6 +124,7 @@ export default function Home() {
                 <EventCard
                   key={event.id}
                   event={event}
+                  onTrackClick={trackEventClick}
                   style={{ animationDelay: `${420 + i * 60}ms` }}
                 />
               ))}
@@ -140,6 +141,7 @@ export default function Home() {
                 <EventCard
                   key={event.id}
                   event={event}
+                  onTrackClick={trackEventClick}
                   style={{ animationDelay: `${520 + i * 60}ms` }}
                 />
               ))}
