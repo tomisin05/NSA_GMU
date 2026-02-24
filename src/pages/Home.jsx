@@ -26,9 +26,41 @@ export default function Home() {
   const { events, loading: eventsLoading } = useEvents();
   const { profile } = useProfile();
 
-  const upcomingEvents = events.filter(
-    (e) => e.date && new Date(e.date) >= new Date(),
-  );
+  const getEventStatus = (event) => {
+    if (!event.date) return 'upcoming'
+    const now = new Date()
+    const eventDate = new Date(event.date + 'T00:00:00')
+    
+    if (event.time && event.endTime) {
+      const parseTime = (timeStr) => {
+        const [time, period] = timeStr.trim().split(' ')
+        const [hours, minutes] = time.split(':')
+        let hour = parseInt(hours)
+        if (period?.toLowerCase() === 'pm' && hour !== 12) hour += 12
+        if (period?.toLowerCase() === 'am' && hour === 12) hour = 0
+        return { hour, minute: parseInt(minutes) || 0 }
+      }
+      
+      const start = parseTime(event.time)
+      const end = parseTime(event.endTime)
+      const eventStart = new Date(eventDate)
+      eventStart.setHours(start.hour, start.minute)
+      const eventEnd = new Date(eventDate)
+      eventEnd.setHours(end.hour, end.minute)
+      
+      if (now >= eventStart && now <= eventEnd) return 'live'
+      if (now > eventEnd) return 'past'
+    } else if (now > eventDate) {
+      return 'past'
+    }
+    
+    return 'upcoming'
+  }
+
+  const upcomingEvents = events.filter(e => {
+    const status = getEventStatus(e)
+    return status === 'upcoming' || status === 'live'
+  });
   const featuredEvent = upcomingEvents[0];
 
   return (
