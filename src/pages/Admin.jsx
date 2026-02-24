@@ -300,24 +300,29 @@ function EventsTab() {
 /* ─── Analytics Tab ─── */
 function AnalyticsTab() {
   const { links } = useLinks()
-  const totalClicks = links.reduce((sum, l) => sum + (l.clicks || 0), 0)
-  const sorted = [...links].sort((a, b) => (b.clicks || 0) - (a.clicks || 0))
-  const max = sorted[0]?.clicks || 1
+  const { events } = useEvents()
+  const totalLinkClicks = links.reduce((sum, l) => sum + (l.clicks || 0), 0)
+  const totalEventClicks = events.reduce((sum, e) => sum + (e.clicks || 0), 0)
+  const sortedLinks = [...links].sort((a, b) => (b.clicks || 0) - (a.clicks || 0))
+  const sortedEvents = [...events].sort((a, b) => (b.clicks || 0) - (a.clicks || 0))
+  const maxLink = sortedLinks[0]?.clicks || 1
+  const maxEvent = sortedEvents[0]?.clicks || 1
 
   return (
     <div>
       <h2 className="font-display text-xl font-bold mb-6">Analytics</h2>
 
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <StatCard label="Total Clicks" value={totalClicks} />
-        <StatCard label="Total Links" value={links.length} />
+      <div className="grid grid-cols-3 gap-4 mb-8">
+        <StatCard label="Link Clicks" value={totalLinkClicks} />
+        <StatCard label="Event Clicks" value={totalEventClicks} />
+        <StatCard label="Total Items" value={links.length + events.length} />
       </div>
 
       <h3 className="font-semibold text-sm text-white/60 uppercase tracking-wider mb-4">
         Link Performance
       </h3>
-      <div className="space-y-3">
-        {sorted.map(link => (
+      <div className="space-y-3 mb-8">
+        {sortedLinks.map(link => (
           <div key={link.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
             <div className="flex items-center justify-between mb-2">
               <span className="font-medium text-sm flex items-center gap-2">
@@ -328,11 +333,30 @@ function AnalyticsTab() {
             </div>
             <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-nsa-green to-nsa-gold rounded-full transition-all duration-500"
-                   style={{ width: `${((link.clicks || 0) / max) * 100}%` }} />
+                   style={{ width: `${((link.clicks || 0) / maxLink) * 100}%` }} />
             </div>
           </div>
         ))}
         {links.length === 0 && <EmptyState message="Add links to see analytics" />}
+      </div>
+
+      <h3 className="font-semibold text-sm text-white/60 uppercase tracking-wider mb-4">
+        Event Performance
+      </h3>
+      <div className="space-y-3">
+        {sortedEvents.map(event => (
+          <div key={event.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-medium text-sm">{event.title}</span>
+              <span className="text-nsa-gold font-semibold text-sm">{event.clicks || 0} clicks</span>
+            </div>
+            <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-nsa-green to-nsa-gold rounded-full transition-all duration-500"
+                   style={{ width: `${((event.clicks || 0) / maxEvent) * 100}%` }} />
+            </div>
+          </div>
+        ))}
+        {events.length === 0 && <EmptyState message="Add events to see analytics" />}
       </div>
     </div>
   )
