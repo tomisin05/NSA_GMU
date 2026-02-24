@@ -60,7 +60,8 @@ export default function Home() {
   const upcomingEvents = events.filter(e => {
     const status = getEventStatus(e)
     return status === 'upcoming' || status === 'live'
-  });
+  })
+  const pastEvents = events.filter(e => getEventStatus(e) === 'past')
   const featuredEvent = upcomingEvents[0];
 
   return (
@@ -97,29 +98,16 @@ export default function Home() {
           {profile.bio}
         </p>
 
-        {/* Featured Event */}
-        {featuredEvent && (
+        {/* Upcoming Events */}
+        {upcomingEvents.length > 0 && (
           <>
-            <SectionLabel label="Featured Events" delay={260} />
-            <div className="w-full mb-3">
-              <EventCard
-                event={featuredEvent}
-                style={{ animationDelay: "280ms" }}
-              />
-            </div>
-          </>
-        )}
-
-        {/* All upcoming events if more than 1 */}
-        {upcomingEvents.length > 1 && (
-          <>
-            <SectionLabel label="All Events" delay={320} />
+            <SectionLabel label="Upcoming Events" delay={260} />
             <div className="w-full flex flex-col gap-3 mb-3">
-              {upcomingEvents.slice(1).map((event, i) => (
+              {upcomingEvents.map((event, i) => (
                 <EventCard
                   key={event.id}
                   event={event}
-                  style={{ animationDelay: `${340 + i * 60}ms` }}
+                  style={{ animationDelay: `${280 + i * 60}ms` }}
                 />
               ))}
             </div>
@@ -137,6 +125,22 @@ export default function Home() {
                   link={link}
                   onTrackClick={trackClick}
                   style={{ animationDelay: `${420 + i * 60}ms` }}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Past Events */}
+        {pastEvents.length > 0 && (
+          <>
+            <SectionLabel label="Past Events" delay={500} />
+            <div className="w-full flex flex-col gap-3 mb-3">
+              {pastEvents.map((event, i) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  style={{ animationDelay: `${520 + i * 60}ms` }}
                 />
               ))}
             </div>
