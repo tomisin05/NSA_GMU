@@ -16,7 +16,7 @@ export default function LinkCard({ link, onTrackClick, style }) {
     >
       <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl
                       bg-white/5 border border-white/10 flex-shrink-0">
-        {link.icon || '→'}
+        {link.icon || '🔗'}
       </div>
       <div className="flex-1 min-w-0">
         <div className="font-medium text-[0.97rem] text-white truncate">{link.title}</div>

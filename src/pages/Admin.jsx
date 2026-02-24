@@ -9,7 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import toast from 'react-hot-toast'
 
 const TABS = ['Links', 'Events', 'Analytics', 'Profile']
-const EMOJI_OPTIONS = ['→','✓','★','●','▶','■','•','✦','✧','✨','✿','❀','❁','❂','❃','❄','❅','❆']
+const EMOJI_OPTIONS = ['🔗']
 
 export default function Admin() {
   const [tab, setTab] = useState('Links')
@@ -80,17 +80,17 @@ function LinksTab() {
   const { links, loading, addLink, updateLink, deleteLink } = useLinks()
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState(null)
-  const [form, setForm] = useState({ title: '', subtitle: '', url: '', icon: '→', order: 0 })
+  const [form, setForm] = useState({ title: '', subtitle: '', url: '', icon: '🔗', order: 0 })
 
   const openAdd = () => {
     setEditing(null)
-    setForm({ title: '', subtitle: '', url: '', icon: '→', order: links.length })
+    setForm({ title: '', subtitle: '', url: '', icon: '🔗', order: links.length })
     setShowForm(true)
   }
 
   const openEdit = (link) => {
     setEditing(link.id)
-    setForm({ title: link.title, subtitle: link.subtitle || '', url: link.url, icon: link.icon || '→', order: link.order || 0 })
+    setForm({ title: link.title, subtitle: link.subtitle || '', url: link.url, icon: link.icon || '🔗', order: link.order || 0 })
     setShowForm(true)
   }
 
@@ -142,7 +142,7 @@ function LinksTab() {
           {links.map(link => (
             <div key={link.id} className="flex items-center gap-4 p-4 rounded-xl bg-white/5
                                           border border-white/10 hover:border-white/20 transition-all">
-              <span className="text-2xl">{link.icon || '→'}</span>
+              <span className="text-2xl">{link.icon || '🔗'}</span>
               <div className="flex-1 min-w-0">
                 <p className="font-medium truncate">{link.title}</p>
                 <p className="text-white/40 text-xs truncate">{link.url}</p>
@@ -321,7 +321,7 @@ function AnalyticsTab() {
           <div key={link.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
             <div className="flex items-center justify-between mb-2">
               <span className="font-medium text-sm flex items-center gap-2">
-                <span>{link.icon || '→'}</span>
+                <span>{link.icon || '🔗'}</span>
                 {link.title}
               </span>
               <span className="text-nsa-gold font-semibold text-sm">{link.clicks || 0} clicks</span>
