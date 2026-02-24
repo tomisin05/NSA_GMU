@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useLinks } from '../hooks/useLinks'
@@ -7,7 +7,7 @@ import { useProfile } from '../hooks/useProfile'
 import toast from 'react-hot-toast'
 
 const TABS = ['Links', 'Events', 'Analytics', 'Profile']
-const EMOJI_OPTIONS = ['🔗','📅','📝','🎓','📸','📧','🤝','🎉','💼','🌍','🏆','📢','💬','▶️','🎵','🏫','🙌','🎤']
+const EMOJI_OPTIONS = ['→','✓','★','●','▶','■','•','✦','✧','✨','✿','❀','❁','❂','❃','❄','❅','❆']
 
 export default function Admin() {
   const [tab, setTab] = useState('Links')
@@ -78,17 +78,17 @@ function LinksTab() {
   const { links, loading, addLink, updateLink, deleteLink } = useLinks()
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState(null)
-  const [form, setForm] = useState({ title: '', subtitle: '', url: '', icon: '🔗', order: 0 })
+  const [form, setForm] = useState({ title: '', subtitle: '', url: '', icon: '→', order: 0 })
 
   const openAdd = () => {
     setEditing(null)
-    setForm({ title: '', subtitle: '', url: '', icon: '🔗', order: links.length })
+    setForm({ title: '', subtitle: '', url: '', icon: '→', order: links.length })
     setShowForm(true)
   }
 
   const openEdit = (link) => {
     setEditing(link.id)
-    setForm({ title: link.title, subtitle: link.subtitle || '', url: link.url, icon: link.icon || '🔗', order: link.order || 0 })
+    setForm({ title: link.title, subtitle: link.subtitle || '', url: link.url, icon: link.icon || '→', order: link.order || 0 })
     setShowForm(true)
   }
 
@@ -140,7 +140,7 @@ function LinksTab() {
           {links.map(link => (
             <div key={link.id} className="flex items-center gap-4 p-4 rounded-xl bg-white/5
                                           border border-white/10 hover:border-white/20 transition-all">
-              <span className="text-2xl">{link.icon || '🔗'}</span>
+              <span className="text-2xl">{link.icon || '→'}</span>
               <div className="flex-1 min-w-0">
                 <p className="font-medium truncate">{link.title}</p>
                 <p className="text-white/40 text-xs truncate">{link.url}</p>
@@ -284,8 +284,8 @@ function AnalyticsTab() {
       <h2 className="font-display text-xl font-bold mb-6">Analytics</h2>
 
       <div className="grid grid-cols-2 gap-4 mb-8">
-        <StatCard label="Total Clicks" value={totalClicks} emoji="👆" />
-        <StatCard label="Total Links" value={links.length} emoji="🔗" />
+        <StatCard label="Total Clicks" value={totalClicks} />
+        <StatCard label="Total Links" value={links.length} />
       </div>
 
       <h3 className="font-semibold text-sm text-white/60 uppercase tracking-wider mb-4">
@@ -296,7 +296,7 @@ function AnalyticsTab() {
           <div key={link.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
             <div className="flex items-center justify-between mb-2">
               <span className="font-medium text-sm flex items-center gap-2">
-                <span>{link.icon || '🔗'}</span>
+                <span>{link.icon || '→'}</span>
                 {link.title}
               </span>
               <span className="text-nsa-gold font-semibold text-sm">{link.clicks || 0} clicks</span>
@@ -318,6 +318,10 @@ function ProfileTab() {
   const { profile, updateProfile } = useProfile()
   const [form, setForm] = useState(profile)
   const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    setForm(profile)
+  }, [profile])
 
   const handleSave = async () => {
     setSaving(true)
@@ -428,10 +432,9 @@ function EmojiPicker({ value, onChange }) {
   )
 }
 
-function StatCard({ label, value, emoji }) {
+function StatCard({ label, value }) {
   return (
     <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
-      <p className="text-3xl mb-1">{emoji}</p>
       <p className="text-3xl font-display font-bold text-nsa-gold">{value}</p>
       <p className="text-white/50 text-sm">{label}</p>
     </div>

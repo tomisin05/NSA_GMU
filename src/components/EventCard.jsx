@@ -28,16 +28,16 @@ export default function EventCard({ event, style }) {
       )}
       <div className="flex flex-wrap gap-4 text-sm text-white/55">
         {formattedDate && (
-          <span className="flex items-center gap-1.5">📅 {formattedDate}</span>
+          <span className="flex items-center gap-1.5">{formattedDate}</span>
         )}
         {event.time && (
-          <span className="flex items-center gap-1.5">🕐 {event.time}</span>
+          <span className="flex items-center gap-1.5">{event.time}</span>
         )}
         {event.location && (
-          <span className="flex items-center gap-1.5">📍 {event.location}</span>
+          <span className="flex items-center gap-1.5">{event.location}</span>
         )}
         {event.price && (
-          <span className="flex items-center gap-1.5">🎟 {event.price}</span>
+          <span className="flex items-center gap-1.5">{event.price}</span>
         )}
       </div>
     </a>
