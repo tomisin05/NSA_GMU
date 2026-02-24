@@ -98,15 +98,16 @@ export default function Home() {
           {profile.bio}
         </p>
 
-        {/* Upcoming Events */}
-        {upcomingEvents.length > 0 && (
+        {/* Links */}
+        {!linksLoading && links.length > 0 && (
           <>
-            <SectionLabel label="Upcoming Events" delay={260} />
+            <SectionLabel label="Quick Links" delay={260} />
             <div className="w-full flex flex-col gap-3 mb-3">
-              {upcomingEvents.map((event, i) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
+              {links.map((link, i) => (
+                <LinkCard
+                  key={link.id}
+                  link={link}
+                  onTrackClick={trackClick}
                   style={{ animationDelay: `${280 + i * 60}ms` }}
                 />
               ))}
@@ -114,16 +115,15 @@ export default function Home() {
           </>
         )}
 
-        {/* Links */}
-        {!linksLoading && links.length > 0 && (
+        {/* Upcoming Events */}
+        {upcomingEvents.length > 0 && (
           <>
-            <SectionLabel label="Quick Links" delay={400} />
+            <SectionLabel label="Upcoming Events" delay={400} />
             <div className="w-full flex flex-col gap-3 mb-3">
-              {links.map((link, i) => (
-                <LinkCard
-                  key={link.id}
-                  link={link}
-                  onTrackClick={trackClick}
+              {upcomingEvents.map((event, i) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
                   style={{ animationDelay: `${420 + i * 60}ms` }}
                 />
               ))}
