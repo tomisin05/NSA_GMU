@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext'
 import { useLinks } from '../hooks/useLinks'
 import { useEvents } from '../hooks/useEvents'
 import { useProfile } from '../hooks/useProfile'
+import { storage } from '../firebase'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import toast from 'react-hot-toast'
 
 const TABS = ['Links', 'Events', 'Analytics', 'Profile']
@@ -171,6 +173,7 @@ function EventsTab() {
   const { events, loading, addEvent, updateEvent, deleteEvent } = useEvents()
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [uploading, setUploading] = useState(false)
   const [form, setForm] = useState({
     title: '', description: '', date: '', time: '', location: '',
     price: 'Free Entry', url: '', badge: 'Upcoming', flyer: ''
@@ -190,6 +193,26 @@ function EventsTab() {
       url: ev.url || '', badge: ev.badge || 'Upcoming', flyer: ev.flyer || ''
     })
     setShowForm(true)
+  }
+
+  const handleFileUpload = async (file) => {
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file')
+      return
+    }
+    setUploading(true)
+    try {
+      const storageRef = ref(storage, `event-flyers/${Date.now()}_${file.name}`)
+      await uploadBytes(storageRef, file)
+      const url = await getDownloadURL(storageRef)
+      setForm(f => ({ ...f, flyer: url }))
+      toast.success('Image uploaded!')
+    } catch (error) {
+      toast.error('Upload failed')
+    } finally {
+      setUploading(false)
+    }
   }
 
   const handleSave = async () => {
@@ -235,7 +258,7 @@ function EventsTab() {
           </div>
           <FormField label="Location" value={form.location} onChange={v => setForm(f => ({ ...f, location: v }))} placeholder="e.g. Student Union Hall, Room 101" />
           <FormField label="Price / Ticket Info" value={form.price} onChange={v => setForm(f => ({ ...f, price: v }))} placeholder="e.g. Free Entry, $10" />
-          <FormField label="Flyer Image URL (optional)" value={form.flyer} onChange={v => setForm(f => ({ ...f, flyer: v }))} placeholder="https://..." />
+          <ImageUpload value={form.flyer} onUpload={handleFileUpload} uploading={uploading} />
           <FormField label="RSVP / Ticket URL" value={form.url} onChange={v => setForm(f => ({ ...f, url: v }))} placeholder="https://..." />
           <FormField label="Badge Label" value={form.badge} onChange={v => setForm(f => ({ ...f, badge: v }))} placeholder="e.g. Upcoming, RSVP Now, Tonight!" />
         </FormCard>
@@ -453,5 +476,31 @@ function Spinner() {
 function EmptyState({ message }) {
   return (
     <div className="text-center py-12 text-white/30 text-sm">{message}</div>
+  )
+}
+
+function ImageUpload({ value, onUpload, uploading }) {
+  return (
+    <div>
+      <label className="block text-white/50 text-xs uppercase tracking-wider mb-1.5">Event Flyer (optional)</label>
+      {value && (
+        <div className="mb-2">
+          <img src={value} alt="Flyer preview" className="w-full h-32 object-cover rounded-lg" />
+        </div>
+      )}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => onUpload(e.target.files[0])}
+        disabled={uploading}
+        className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3
+                   text-white text-sm outline-none
+                   focus:border-nsa-gold/50 focus:bg-white/8 transition-all
+                   file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
+                   file:bg-nsa-green file:text-white file:text-sm file:font-medium
+                   hover:file:bg-nsa-green/80 disabled:opacity-50"
+      />
+      {uploading && <p className="text-white/40 text-xs mt-1">Uploading...</p>}
+    </div>
   )
 }
